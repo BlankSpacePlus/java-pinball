@@ -14,8 +14,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -72,7 +74,6 @@ public class PinballFrame extends JFrame {
         this.random = new Random();
         this.canvas = new GameCanvas(g -> {
             if (this.isLose) {
-                // 寄
                 g.setColor(new Color(255, 0, 0));
                 g.setFont(new Font("Times", Font.BOLD, 30));
                 int option = JOptionPane.showConfirmDialog(this, "是否重新开始？", "游戏结束", JOptionPane.YES_NO_OPTION);
@@ -81,10 +82,10 @@ public class PinballFrame extends JFrame {
                 }
             } else {
                 // 设置颜色，并绘制小球
-                g.setColor(new Color(255, 69, 0));
+                g.setColor(new Color(255, 70, 0));
                 g.fillOval(this.ballX, this.ballY, BALL_SIZE, BALL_SIZE);
                 // 设置颜色，并绘制球拍
-                g.setColor(new Color(25, 25, 112));
+                g.setColor(new Color(25, 25, 110));
                 g.fillRect(this.racketX, RACKET_Y, RACKET_WIDTH, RACKET_HEIGHT);
             }
         });
@@ -95,6 +96,9 @@ public class PinballFrame extends JFrame {
      * 初始化操作
      */
     private void init() {
+        // 设置图标
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("../../../pinball.jpg")));
+        this.setIconImage(imageIcon.getImage());
         // 设置桌面区域的最佳大小
         this.canvas.setPreferredSize(new Dimension(TABLE_WIDTH, TABLE_HEIGHT));
         // Canvas添加到JFrame
@@ -141,10 +145,13 @@ public class PinballFrame extends JFrame {
         this.startGame();
     }
 
+    /**
+     * 游戏启动
+     */
     private void startGame() {
+        this.xyRate = random.nextDouble() - 0.5;
         this.ySpeed = 12;
         this.xSpeed = (int) (ySpeed * xyRate * 2);
-        this.xyRate = random.nextDouble() - 0.5;
         this.ballY = random.nextInt(10) + 20;
         this.ballX = random.nextInt(200) + 20;
         this.racketX = random.nextInt(200);
@@ -153,7 +160,7 @@ public class PinballFrame extends JFrame {
         this.timer = new Timer(100, e -> {
             // 如果小球碰到左边边框
             if (this.ballX <= 0 || this.ballX >= TABLE_WIDTH - BALL_SIZE) {
-                this.xSpeed = - this.xSpeed;
+                this.xSpeed = -this.xSpeed;
             }
             // 如果小球高度超越了球拍位置，且横向不在球拍范围之内，游戏结束
             if (this.ballY >= RACKET_Y - BALL_SIZE &&
@@ -167,7 +174,7 @@ public class PinballFrame extends JFrame {
             } else if (this.ballY <= 0 || (this.ballY > RACKET_Y - BALL_SIZE &&
                     this.ballX > racketX && this.ballX <= racketX + RACKET_WIDTH)) {
                 // 如果小球位于球拍之内，且到达球拍位置，球反弹
-                this.ySpeed = - this.ySpeed;
+                this.ySpeed = -this.ySpeed;
             }
             // 小球纵坐标增加
             this.ballY += this.ySpeed;
