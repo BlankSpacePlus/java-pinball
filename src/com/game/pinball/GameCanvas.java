@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 /**
  * Canvas组件实现
  */
-public class MyCanvas extends Canvas {
+public class GameCanvas extends Canvas {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,7 @@ public class MyCanvas extends Canvas {
      *
      * @param consumer 匿名paint方法
      */
-    public MyCanvas(Consumer<Graphics> consumer) {
+    public GameCanvas(Consumer<Graphics> consumer) {
         this.consumer = consumer;
     }
 
